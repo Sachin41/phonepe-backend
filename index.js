@@ -32,7 +32,7 @@ app.get("/", (req, res) => {
 app.post("/order", async (req, res) => {
 
     try {
-        console.log(req.body)
+        console.log("Order Request:", req.body);
 
         const merchantTransactionId = req.body.transactionId;
         const data = {
