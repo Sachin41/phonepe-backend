@@ -42,6 +42,7 @@ app.post("/order", async (req, res) => {
             amount: req.body.amount * 100,
             redirectUrl: `http://localhost:8000/status/?id=${merchantTransactionId}`,
             redirectMode: 'POST',
+            callbackUrl: `http://localhost:8000/status/?id=${merchantTransactionId}`,
             mobileNumber: req.body.number,
             paymentInstrument: {
                 type: 'PAY_PAGE'
@@ -71,10 +72,10 @@ app.post("/order", async (req, res) => {
         };
 
         axios.request(options).then(function (response) {
-                console.log(response.data)
+            console.log("order data", response.data)
 
-                return res.json(response.data)
-            })
+            return res.json(response.data)
+        })
             .catch(function (error) {
                 console.error(error);
             });
@@ -112,14 +113,39 @@ app.post("/status", async (req, res) => {
 
     // CHECK PAYMENT STATUS
     axios.request(options).then(async (response) => {
-            if (response.data.success === true) {
-                const url = `http://localhost:5173/success`
-                return res.redirect(url)
-            } else {
-                const url = `http://localhost:5173/failure`
-                return res.redirect(url)
-            }
-        })
+        if (response.data.success === true) {
+            console.log("payment completed", response.data);
+            res.cookie("orderData", JSON.stringify(response.data), {
+                httpOnly: false,      // allow frontend JS access
+                secure: false,        // true only in HTTPS production
+                sameSite: "lax"
+            });
+
+            const orderId = response.data.data.transactionId;
+            // const orderId = "12345";
+            console.log("orderIDs", orderId);
+
+            // ✅ UPDATE ORDER IN DB
+            // await Order.findOneAndUpdate(
+            //     { transactionId: orderId },
+            //     {
+            //         status: "SUCCESS",
+            //         paymentId: response.data.data.transactionId,
+            //         paymentResponse: response.data
+            //     },
+            //     { new: true }
+            // );
+            const url = `http://localhost:5173/ordersummary?orderId=${orderId}`
+            return res.redirect(url)
+        } else {
+            // await Order.findOneAndUpdate(
+            //     { transactionId: merchantTransactionId },
+            //     { status: "FAILED" }
+            // );
+            const url = `http://localhost:5173/failure`
+            return res.redirect(url)
+        }
+    })
         .catch((error) => {
             console.error(error);
         });
