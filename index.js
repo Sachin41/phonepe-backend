@@ -40,9 +40,9 @@ app.post("/order", async (req, res) => {
             merchantTransactionId: merchantTransactionId,
             name: req.body.name,
             amount: req.body.amount * 100,
-            redirectUrl: `http://localhost:8000/status/?id=${merchantTransactionId}`,
+            redirectUrl: `https://foodapp-backend-si51.onrender.com/status/?id=${merchantTransactionId}`,
             redirectMode: 'POST',
-            callbackUrl: `http://localhost:8000/status/?id=${merchantTransactionId}`,
+            callbackUrl: `https://foodapp-backend-si51.onrender.com/status/?id=${merchantTransactionId}`,
             mobileNumber: req.body.number,
             paymentInstrument: {
                 type: 'PAY_PAGE'
