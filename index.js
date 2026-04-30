@@ -135,14 +135,14 @@ app.post("/status", async (req, res) => {
             //     },
             //     { new: true }
             // );
-            const url = `http://localhost:5173/ordersummary?orderId=${orderId}`
+            const url = `https://foodportdelivery.netlify.app/ordersummary?orderId=${orderId}`
             return res.redirect(url)
         } else {
             // await Order.findOneAndUpdate(
             //     { transactionId: merchantTransactionId },
             //     { status: "FAILED" }
             // );
-            const url = `http://localhost:5173/failure`
+            const url = `https://foodportdelivery.netlify.app/failure`
             return res.redirect(url)
         }
     })
