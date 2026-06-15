@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 
+const authRoutes = require("./routes/authRoutes");
 const paymentRoutes = require("./routes/paymentRoutes");
 const orderRoutes = require("./routes/orderRoutes");
 
@@ -17,6 +18,8 @@ app.use(
         extended: false,
     })
 );
+
+app.use("/api/auth", authRoutes);
 
 app.use("/api/payment", paymentRoutes);
 

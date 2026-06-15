@@ -18,6 +18,7 @@ exports.createPhonePeOrder = async (data) => {
 
     if (!existingOrder) {
         await Order.create({
+            userId: data.userId,
             transactionId: merchantTransactionId,
             customerName: data.name,
             customerPhone: data.number,
